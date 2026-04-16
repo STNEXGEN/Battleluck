@@ -1,10 +1,20 @@
 ﻿using System.Linq;
+using System.Globalization;
 using VampireCommandFramework;
 using System.Collections.Generic;
 using Unity.Entities;
 
 public static class AdminCommands
 {
+    static readonly FieldInfo[] NetworkIdNumericFields = typeof(NetworkId)
+        .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+        .Where(field =>
+            field.FieldType == typeof(byte) || field.FieldType == typeof(sbyte) ||
+            field.FieldType == typeof(short) || field.FieldType == typeof(ushort) ||
+            field.FieldType == typeof(int) || field.FieldType == typeof(uint) ||
+            field.FieldType == typeof(long) || field.FieldType == typeof(ulong))
+        .ToArray();
+
     [Command("debugabilities", description: "Print all discovered AbilityGroup prefabs from the server", adminOnly: true)]
     public static void DebugAbilities(ChatCommandContext ctx)
     {
@@ -440,6 +450,202 @@ public static class AdminCommands
         {
             ctx.Reply($"  <color=green>{kv.Key}</color> = {kv.Value.GuidHash}");
         }
+    }
+
+    [Command("stashnpc", description: "Transfer items from NPC source(s) to destination entity. Usage: .stashnpc <destNetId> [sourceNetId|allteam] [maxDistance] [sameTeam] [minStack] [maxStacks] [itemFilter]", adminOnly: true)]
+    public static void StashNpc(
+        ChatCommandContext ctx,
+        ulong destinationNetId,
+        string sourceSelector = "allteam",
+        float maxDistance = -1f,
+        bool requireSameTeam = true,
+        int minStack = 1,
+        int maxStacks = 20,
+        string itemFilter = "")
+    {
+        var sender = ctx.Event.SenderCharacterEntity;
+        if (sender == Entity.Null || !sender.Exists())
+        {
+            ctx.Reply("Sender character is not available.");
+            return;
+        }
+
+        if (!TryResolveEntityByNetworkNumeric(destinationNetId, out var destination))
+        {
+            ctx.Reply($"Destination network id {destinationNetId} was not found.");
+            return;
+        }
+
+        if (!InventoryUtilities.TryGetInventoryEntity(VRisingCore.EntityManager, destination, out _))
+        {
+            ctx.Reply($"Destination {destinationNetId} does not expose an inventory entity.");
+            return;
+        }
+
+        PrefabHelper.ScanLivePrefabs();
+
+        Func<PrefabGUID, int, bool>? itemPredicate = null;
+        if (!string.IsNullOrWhiteSpace(itemFilter))
+        {
+            itemPredicate = (prefab, _) =>
+            {
+                var name = PrefabHelper.GetLivePrefabName(prefab) ?? PrefabHelper.GetName(prefab) ?? prefab.GuidHash.ToString();
+                return name.Contains(itemFilter, StringComparison.OrdinalIgnoreCase);
+            };
+        }
+
+        var options = new EntityExtensions.NpcStashTransferConditions
+        {
+            SourceMustBeNpc = true,
+            RequireSameTeam = requireSameTeam,
+            MaxDistance = maxDistance,
+            MinStackAmount = Math.Max(1, minStack),
+            MaxStacks = Math.Clamp(maxStacks, 1, 200),
+            ItemFilter = itemPredicate
+        };
+
+        int moved;
+        if (sourceSelector.Equals("allteam", StringComparison.OrdinalIgnoreCase))
+        {
+            var team = sender.Has<Team>() ? sender.Read<Team>().Value : int.MinValue;
+            var candidates = GetNpcCandidatesForStash(destination, sender, requireSameTeam, team);
+
+            moved = candidates.TryStashFromNpcs(destination, options);
+            ctx.Reply($"stashnpc complete: moved {moved} item amount from {candidates.Count} NPC candidate(s) to destination {destinationNetId}.");
+            return;
+        }
+
+        if (!ulong.TryParse(sourceSelector, NumberStyles.Integer, CultureInfo.InvariantCulture, out var sourceNetId))
+        {
+            ctx.Reply($"Invalid source selector '{sourceSelector}'. Use a network id or 'allteam'.");
+            return;
+        }
+
+        if (!TryResolveEntityByNetworkNumeric(sourceNetId, out var sourceNpc))
+        {
+            ctx.Reply($"Source NPC network id {sourceNetId} was not found.");
+            return;
+        }
+
+        moved = sourceNpc.TryStashFromNpc(destination, options);
+        ctx.Reply($"stashnpc complete: moved {moved} item amount from source {sourceNetId} to destination {destinationNetId}.");
+    }
+
+    static bool TryResolveEntityByNetworkNumeric(ulong networkIdValue, out Entity resolved)
+    {
+        resolved = Entity.Null;
+        var em = VRisingCore.EntityManager;
+        var query = em.CreateEntityQuery(ComponentType.ReadOnly<NetworkId>());
+        var entities = query.ToEntityArray(Allocator.Temp);
+
+        try
+        {
+            foreach (var entity in entities)
+            {
+                if (!entity.Exists())
+                    continue;
+
+                var networkId = entity.Read<NetworkId>();
+                if (!TryExtractNetworkIdKeys(networkId, out var keys))
+                    continue;
+
+                if (keys.Contains(networkIdValue))
+                {
+                    resolved = entity;
+                    return true;
+                }
+            }
+        }
+        finally
+        {
+            if (entities.IsCreated)
+                entities.Dispose();
+        }
+
+        return false;
+    }
+
+    static List<Entity> GetNpcCandidatesForStash(Entity destination, Entity sender, bool requireSameTeam, int senderTeam)
+    {
+        var em = VRisingCore.EntityManager;
+        var query = em.CreateEntityQuery(ComponentType.ReadOnly<NetworkId>());
+        var entities = query.ToEntityArray(Allocator.Temp);
+        var candidates = new List<Entity>();
+
+        try
+        {
+            foreach (var entity in entities)
+            {
+                if (!entity.Exists() || entity == destination || entity == sender)
+                    continue;
+
+                if (entity.Has<PlayerCharacter>())
+                    continue;
+
+                if (requireSameTeam && (!entity.Has<Team>() || entity.Read<Team>().Value != senderTeam))
+                    continue;
+
+                candidates.Add(entity);
+            }
+        }
+        finally
+        {
+            if (entities.IsCreated)
+                entities.Dispose();
+        }
+
+        return candidates;
+    }
+
+    static bool TryExtractNetworkIdKeys(NetworkId networkId, out HashSet<ulong> keys)
+    {
+        keys = new HashSet<ulong>();
+
+        var directText = networkId.ToString();
+        if (ulong.TryParse(directText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var direct))
+            keys.Add(direct);
+
+        var digitOnly = new string(directText.Where(char.IsDigit).ToArray());
+        if (ulong.TryParse(digitOnly, NumberStyles.Integer, CultureInfo.InvariantCulture, out var digits))
+            keys.Add(digits);
+
+        object boxed = networkId;
+        foreach (var field in NetworkIdNumericFields)
+        {
+            var value = field.GetValue(boxed);
+            if (value == null)
+                continue;
+
+            switch (value)
+            {
+                case byte b:
+                    keys.Add(b);
+                    break;
+                case sbyte sb when sb >= 0:
+                    keys.Add((ulong)sb);
+                    break;
+                case short s when s >= 0:
+                    keys.Add((ulong)s);
+                    break;
+                case ushort us:
+                    keys.Add(us);
+                    break;
+                case int i when i >= 0:
+                    keys.Add((ulong)i);
+                    break;
+                case uint ui:
+                    keys.Add(ui);
+                    break;
+                case long l when l >= 0:
+                    keys.Add((ulong)l);
+                    break;
+                case ulong ul:
+                    keys.Add(ul);
+                    break;
+            }
+        }
+
+        return keys.Count > 0;
     }
 
     // ── AI Assistant Admin Commands ─────────────────────────────────────

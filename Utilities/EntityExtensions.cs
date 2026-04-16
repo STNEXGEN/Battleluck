@@ -377,6 +377,28 @@ public static class EntityExtensions
     }
 
     // ── Inventory ───────────────────────────────────────────────────────
+    public readonly record struct NpcStashTransferConditions
+    {
+        public static readonly NpcStashTransferConditions Default = new();
+
+        public NpcStashTransferConditions()
+        {
+            SourceMustBeNpc = true;
+            RequireSameTeam = false;
+            MaxDistance = -1f;
+            MinStackAmount = 1;
+            MaxStacks = int.MaxValue;
+            ItemFilter = null;
+        }
+
+        public bool SourceMustBeNpc { get; init; }
+        public bool RequireSameTeam { get; init; }
+        public float MaxDistance { get; init; }
+        public int MinStackAmount { get; init; }
+        public int MaxStacks { get; init; }
+        public Func<PrefabGUID, int, bool>? ItemFilter { get; init; }
+    }
+
     public static bool TryGiveItem(this Entity character, PrefabGUID itemPrefab, int amount)
     {
         return Sgm.TryAddInventoryItem(character, itemPrefab, amount);
@@ -388,6 +410,94 @@ public static class EntityExtensions
             return false;
 
         return Sgm.TryRemoveInventoryItem(inventoryEntity, itemPrefab, amount);
+    }
+
+    /// <summary>
+    /// Moves items from an NPC inventory to any destination inventory carrier
+    /// (container, player, or other unit) using configurable conditions.
+    /// Returns total moved item amount.
+    /// </summary>
+    public static int TryStashFromNpc(this Entity sourceNpc, Entity destination, NpcStashTransferConditions? conditions = null)
+    {
+        var options = conditions ?? NpcStashTransferConditions.Default;
+
+        if (!sourceNpc.Exists() || !destination.Exists() || sourceNpc == destination)
+            return 0;
+
+        if (options.SourceMustBeNpc && sourceNpc.Has<PlayerCharacter>())
+            return 0;
+
+        if (options.RequireSameTeam)
+        {
+            if (!sourceNpc.Has<Team>() || !destination.Has<Team>())
+                return 0;
+
+            if (sourceNpc.Read<Team>().Value != destination.Read<Team>().Value)
+                return 0;
+        }
+
+        if (options.MaxDistance >= 0f)
+        {
+            var distance = math.distance(sourceNpc.GetPosition(), destination.GetPosition());
+            if (distance > options.MaxDistance)
+                return 0;
+        }
+
+        if (!InventoryUtilities.TryGetInventoryEntity(Em, sourceNpc, out var sourceInventoryEntity))
+            return 0;
+
+        if (!Em.HasBuffer<InventoryBuffer>(sourceInventoryEntity))
+            return 0;
+
+        var sourceInventory = Em.GetBuffer<InventoryBuffer>(sourceInventoryEntity);
+        var candidates = new List<(PrefabGUID item, int amount)>();
+
+        for (int i = 0; i < sourceInventory.Length; i++)
+        {
+            var slot = sourceInventory[i];
+            if (slot.ItemType == PrefabGUID.Empty || slot.Amount < options.MinStackAmount)
+                continue;
+
+            if (options.ItemFilter != null && !options.ItemFilter(slot.ItemType, slot.Amount))
+                continue;
+
+            candidates.Add((slot.ItemType, slot.Amount));
+            if (candidates.Count >= options.MaxStacks)
+                break;
+        }
+
+        if (candidates.Count == 0)
+            return 0;
+
+        int movedAmount = 0;
+        foreach (var (item, amount) in candidates)
+        {
+            if (!Sgm.TryAddInventoryItem(destination, item, amount))
+                continue;
+
+            if (!Sgm.TryRemoveInventoryItem(sourceInventoryEntity, item, amount))
+            {
+                Sgm.TryRemoveInventoryItem(destination, item, amount);
+                continue;
+            }
+
+            movedAmount += amount;
+        }
+
+        return movedAmount;
+    }
+
+    /// <summary>
+    /// Moves matching items from multiple NPCs to a destination inventory carrier.
+    /// Returns total moved item amount across all sources.
+    /// </summary>
+    public static int TryStashFromNpcs(this IEnumerable<Entity> sourceNpcs, Entity destination, NpcStashTransferConditions? conditions = null)
+    {
+        int moved = 0;
+        foreach (var sourceNpc in sourceNpcs)
+            moved += sourceNpc.TryStashFromNpc(destination, conditions);
+
+        return moved;
     }
 
     // ── Spawning ────────────────────────────────────────────────────────
