@@ -1,0 +1,32 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["trials_exit"],
+  "flows": {
+    "trials_exit": {
+      "description": "Trials exit — end mode, restore snapshot.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=trials",
+        "state.clear_zone:zoneHash=2004",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=trials",
+        "visual_disable:zoneHash=2004",
+        "snapshot.restore_old:zoneHash=2004",
+        "snapshot.clear_active:zoneHash=2004",
+        "heal",
+        "send_message:message=<color=#888888>Trials ended — gear restored.</color>"
+      ]
+    }
+  }
+}

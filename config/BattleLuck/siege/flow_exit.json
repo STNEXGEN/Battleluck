@@ -1,0 +1,33 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["siege_exit"],
+  "flows": {
+    "siege_exit": {
+      "description": "Siege exit — end mode, disable PvP, restore snapshot.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=siege",
+        "state.clear_zone:zoneHash=2003",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=siege",
+        "visual_disable:zoneHash=2003",
+        "snapshot.restore_old:zoneHash=2003",
+        "snapshot.clear_active:zoneHash=2003",
+        "disable_pvp",
+        "heal",
+        "send_message:message=<color=#888888>Siege ended — gear restored.</color>"
+      ]
+    }
+  }
+}

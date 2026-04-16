@@ -1,0 +1,35 @@
+{
+  "enabled": true,
+  "google_ai": {
+    "api_key": "",
+    "model": "gemini-2.5-flash",
+    "fallback_models": [
+      "gemini-2.0-flash",
+      "gemini-1.5-flash"
+    ],
+    "max_requests_per_second": 10,
+    "temperature": 0.8,
+    "max_tokens": 300
+  },
+  "ai_sidecar": {
+    "enabled": true,
+    "base_url": "https://ais-pre-ddtfjbzbgpc2mlkz7nqvra-782381585235.europe-west2.run.app",
+    "auth_key": "",
+    "timeout_seconds": 10
+  },
+  "messaging": {
+    "message_cooldown_seconds": 30,
+    "tip_cooldown_minutes": 5,
+    "context_retention_minutes": 30,
+    "auto_tips_enabled": true,
+    "welcome_messages_enabled": true,
+    "match_summaries_enabled": true,
+    "discord_webhook_url": ""
+  },
+  "privacy": {
+    "opt_out_by_default": false,
+    "allow_player_toggle": true,
+    "store_conversation_history": true,
+    "max_conversation_history_size": 20
+  }
+}

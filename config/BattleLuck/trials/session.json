@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "Trials",
+  "description": "Timed PvE challenge — clear objectives fast for bonus points.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 3
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "enablePvP": false,
+    "enableVBloods": true,
+    "enableEliteMobs": true,
+    "matchDurationMinutes": 5,
+    "allowLateJoin": false,
+    "requireReadyCheck": true,
+    "restrictGear": true,
+    "shareLoot": true,
+    "resetOnExit": true,
+    "eliminationMode": true,
+    "livesPerPlayer": 1
+  }
+}

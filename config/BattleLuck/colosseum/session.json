@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "Colosseum",
+  "description": "Ranked 1v1 duels with Elo rating — prove your worth.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 3
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "enablePvP": true,
+    "enableVBloods": false,
+    "enableEliteMobs": false,
+    "matchDurationMinutes": 6,
+    "allowLateJoin": false,
+    "requireReadyCheck": true,
+    "restrictGear": true,
+    "shareLoot": false,
+    "resetOnExit": true,
+    "eliminationMode": true,
+    "livesPerPlayer": 0
+  }
+}

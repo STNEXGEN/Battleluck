@@ -1,0 +1,41 @@
+{
+  "settings": {
+    "gearLevel": 90,
+    "healOnApply": true,
+    "clearInventoryFirst": true
+  },
+  "blood": {
+    "type": "Rogue",
+    "quality": 100.0,
+    "value": 100.0
+  },
+  "armors": {
+    "chest": "Item_Armor_Chest_T09",
+    "legs": "Item_Armor_Legs_T09",
+    "gloves": "Item_Armor_Gloves_T09",
+    "boots": "Item_Armor_Boots_T09",
+    "cloak": "Item_Cloak_T09",
+    "headgear": "Item_Headgear_T09",
+    "magicSource": "Item_MagicSource_Blood_T09"
+  },
+  "weapons": [
+    { "prefab": "Item_Weapon_Sword_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Axe_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Mace_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Spear_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Crossbow_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Slashers_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Reaper_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Pistols_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_GreatSword_T09", "amount": 1 },
+    { "prefab": "Item_Weapon_Whip_T09", "amount": 1 }
+  ],
+  "items": [],
+  "abilities": {
+    "travel": { "prefab": "AB_Blood_ShadowBolt" },
+    "spell1": { "prefab": "AB_Blood_BloodFountain" },
+    "spell2": { "prefab": "AB_Illusion_MistTrance" },
+    "ultimate": { "prefab": "AB_Blood_SanguineCoil" }
+  },
+  "passiveSpells": []
+}

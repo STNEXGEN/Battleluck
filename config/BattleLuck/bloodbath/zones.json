@@ -1,0 +1,175 @@
+﻿{
+    "detection":  {
+                      "checkIntervalMs":  500,
+                      "positionThreshold":  1.0
+                  },
+    "autoEnter":  {
+                      "enabled":  true,
+                      "enterOnConnect":  false,
+                      "enterOnSpawn":  true,
+                      "exitOnDisconnect":  true,
+                      "tickIntervalMs":  250,
+                      "spawnResolveTimeoutMs":  15000
+                  },
+    "fxPresetList":  [
+
+                     ],
+    "zones":  [
+                  {
+                      "name":  "Bloodbath Arena",
+                      "type":  "bloodbath",
+                      "hash":  2002,
+                      "priority":  1,
+                      "kitId":  "bloodbath",
+                      "position":  {
+                                       "x":  -2000,
+                                       "y":  5,
+                                       "z":  -2800
+                                   },
+                      "teleportSpawn":  {
+                                            "x":  -2000,
+                                            "y":  5,
+                                            "z":  -2800
+                                        },
+                      "radius":  50.0,
+                      "exitRadius":  55.0,
+                      "isSafe":  false,
+                      "blockedActions":  [
+
+                                         ],
+                      "boundary":  {
+                                       "policy":  "dot_and_walls",
+                                       "dot":  {
+                                                   "enabled":  true,
+                                                   "warningRadiusPercent":  0.80,
+                                                   "dangerRadiusPercent":  0.95,
+                                                   "teleportOnExit":  true
+                                               },
+                                       "walls":  {
+                                                     "enabled":  true,
+                                                     "height":  15.0,
+                                                     "spacing":  5.0,
+                                                     "batchSize":  10
+                                                 }
+                                   },
+                      "waypoints":  {
+                                        "enabled":  true,
+                                        "points":  [
+                                                       {
+                                                           "x":  -2000,
+                                                           "y":  20,
+                                                           "z":  -2800
+                                                       },
+                                                       {
+                                                           "x":  -1980,
+                                                           "y":  20,
+                                                           "z":  -2780
+                                                       },
+                                                       {
+                                                           "x":  -1960,
+                                                           "y":  20,
+                                                           "z":  -2800
+                                                       },
+                                                       {
+                                                           "x":  -1980,
+                                                           "y":  20,
+                                                           "z":  -2820
+                                                       },
+                                                       {
+                                                           "x":  -2000,
+                                                           "y":  20,
+                                                           "z":  -2840
+                                                       },
+                                                       {
+                                                           "x":  -2020,
+                                                           "y":  20,
+                                                           "z":  -2820
+                                                       },
+                                                       {
+                                                           "x":  -2040,
+                                                           "y":  20,
+                                                           "z":  -2800
+                                                       },
+                                                       {
+                                                           "x":  -2020,
+                                                           "y":  20,
+                                                           "z":  -2780
+                                                       },
+                                                       {
+                                                           "x":  -2000,
+                                                           "y":  20,
+                                                           "z":  -2760
+                                                       },
+                                                       {
+                                                           "x":  -2000,
+                                                           "y":  20,
+                                                           "z":  -2800
+                                                       }
+                                                   ],
+                                        "moveIntervalSec":  5,
+                                        "moveSpeed":  8,
+                                        "loop":  true,
+                                        "radiusShrinkPerWaypoint":  3,
+                                        "minimumRadius":  15
+                                    },
+                      "glowBorder":  {
+                                         "enabled":  true,
+                                         "scanWidth":  10,
+                                         "maxGlowEntities":  50,
+                                         "batchSize":  10
+                                     },
+                      "movingPlatform":  {
+                                             "enabled":  true,
+                                             "tilePrefab":  "TM_Castle_Wall_Tier02_Stone",
+                                             "gridSize":  5,
+                                             "tileSpacing":  2.5,
+                                             "heightOffset":  0.1,
+                                             "glowEdge":  true,
+                                             "totalTiles":  25
+                                         },
+                      "lootCrates":  {
+                                         "enabled":  true,
+                                         "spawnIntervalSec":  15,
+                                         "maxActiveCrates":  3,
+                                         "despawnAfterSec":  10,
+                                         "crateTypes":  [
+                                                            {
+                                                                "type":  "health_potion",
+                                                                "weight":  40,
+                                                                "prefab":  "Item_Consumable_GlassBottle_BloodRosePotion_T01"
+                                                            },
+                                                            {
+                                                                "type":  "speed_buff",
+                                                                "weight":  25,
+                                                                "prefab":  "Buff_Cloak_Mounted"
+                                                            },
+                                                            {
+                                                                "type":  "damage_buff",
+                                                                "weight":  20,
+                                                                "prefab":  "Buff_InCombat"
+                                                            },
+                                                            {
+                                                                "type":  "shield_buff",
+                                                                "weight":  10,
+                                                                "prefab":  "Buff_BloodMend"
+                                                            },
+                                                            {
+                                                                "type":  "blood_mend",
+                                                                "weight":  10,
+                                                                "prefab":  "Buff_General_VampireBloodDrain"
+                                                            },
+                                                            {
+                                                                "type":  "holy_resist",
+                                                                "weight":  8,
+                                                                "prefab":  "Buff_General_HolyAreaProtection"
+                                                            },
+                                                            {
+                                                                "type":  "garlic_resist",
+                                                                "weight":  7,
+                                                                "prefab":  "Buff_General_GarlicAreaProtection"
+                                                            }
+                                                        ]
+                                     }
+                  }
+              ]
+}

@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "Siege",
+  "description": "Team PvP with capture points — control objectives to win.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 5
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 10,
+    "enablePvP": true,
+    "enableVBloods": false,
+    "enableEliteMobs": false,
+    "matchDurationMinutes": 10,
+    "allowLateJoin": false,
+    "requireReadyCheck": true,
+    "restrictGear": true,
+    "shareLoot": false,
+    "resetOnExit": true,
+    "eliminationMode": false,
+    "livesPerPlayer": 0
+  }
+}

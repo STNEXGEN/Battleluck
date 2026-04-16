@@ -1,0 +1,36 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["bloodbath_enter"],
+  "flows": {
+    "bloodbath_enter": {
+      "description": "Bloodbath entry — snapshot, kit, enable PvP, start mode.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2002|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2002",
+        "state.clear_old:zoneHash=2002",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "kit.apply:kitId=bloodbath",
+        "enable_pvp",
+        "set_blood:bloodType=Scholar|quality=100",
+        "heal",
+        "visual_enable:zoneHash=2002",
+        "player.teleport:targetZoneHash=2002",
+        "player.stun:durationSeconds=3",
+        "mode.start:modeId=bloodbath",
+        "send_message:message=<color=#ff3333>☠ Bloodbath! Last vampire standing wins!</color>"
+      ]
+    }
+  }
+}

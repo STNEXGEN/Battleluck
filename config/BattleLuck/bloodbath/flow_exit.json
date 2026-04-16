@@ -1,0 +1,33 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["bloodbath_exit"],
+  "flows": {
+    "bloodbath_exit": {
+      "description": "Bloodbath exit — end mode, disable PvP, restore snapshot.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=bloodbath",
+        "state.clear_zone:zoneHash=2002",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=bloodbath",
+        "visual_disable:zoneHash=2002",
+        "snapshot.restore_old:zoneHash=2002",
+        "snapshot.clear_active:zoneHash=2002",
+        "disable_pvp",
+        "heal",
+        "send_message:message=<color=#888888>Bloodbath ended — gear restored.</color>"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["siege_enter"],
+  "flows": {
+    "siege_enter": {
+      "description": "Siege entry — snapshot, kit, enable PvP, start mode.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2003|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2003",
+        "state.clear_old:zoneHash=2003",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "kit.apply:kitId=siege",
+        "enable_pvp",
+        "set_blood:bloodType=Warrior|quality=100",
+        "heal",
+        "visual_enable:zoneHash=2003",
+        "player.teleport:targetZoneHash=2003",
+        "player.stun:durationSeconds=5",
+        "mode.start:modeId=siege",
+        "send_message:message=<color=#3399ff>🏰 Siege! Capture all objectives to win!</color>"
+      ]
+    }
+  }
+}

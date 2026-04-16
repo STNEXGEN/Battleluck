@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "AI Event Test",
+  "description": "Deterministic mode that fires AI-relevant events for end-to-end validation.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 1
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "enablePvP": false,
+    "enableVBloods": false,
+    "enableEliteMobs": false,
+    "matchDurationMinutes": 1,
+    "allowLateJoin": true,
+    "requireReadyCheck": false,
+    "restrictGear": false,
+    "shareLoot": false,
+    "resetOnExit": true,
+    "eliminationMode": false,
+    "livesPerPlayer": 1
+  }
+}

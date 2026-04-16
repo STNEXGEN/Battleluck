@@ -1,0 +1,33 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["aievent_enter"],
+  "flows": {
+    "aievent_enter": {
+      "description": "AI event test entry flow.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2010|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2010",
+        "state.clear_old:zoneHash=2010",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "heal",
+        "visual_enable:zoneHash=2010",
+        "player.teleport:targetZoneHash=2010",
+        "player.stun:durationSeconds=2",
+        "mode.start:modeId=aievent",
+        "send_message:message=<color=#66d9ff>AI Event test started.</color>"
+      ]
+    }
+  }
+}

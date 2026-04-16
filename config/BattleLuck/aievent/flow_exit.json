@@ -1,0 +1,32 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["aievent_exit"],
+  "flows": {
+    "aievent_exit": {
+      "description": "AI event test exit flow.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=aievent",
+        "state.clear_zone:zoneHash=2010",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=aievent",
+        "visual_disable:zoneHash=2010",
+        "snapshot.restore_old:zoneHash=2010",
+        "snapshot.clear_active:zoneHash=2010",
+        "heal",
+        "send_message:message=<color=#888888>AI Event test ended.</color>"
+      ]
+    }
+  }
+}

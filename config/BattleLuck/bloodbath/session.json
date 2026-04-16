@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "Bloodbath",
+  "description": "Free-for-all PvP with shrinking zone — last vampire standing wins.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 5
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 10,
+    "enablePvP": true,
+    "enableVBloods": false,
+    "enableEliteMobs": false,
+    "matchDurationMinutes": 5,
+    "allowLateJoin": false,
+    "requireReadyCheck": true,
+    "restrictGear": true,
+    "shareLoot": false,
+    "resetOnExit": true,
+    "eliminationMode": true,
+    "livesPerPlayer": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["colosseum_exit"],
+  "flows": {
+    "colosseum_exit": {
+      "description": "Colosseum exit — end mode, update Elo, disable PvP, restore snapshot.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=colosseum",
+        "state.clear_zone:zoneHash=2005",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=colosseum",
+        "visual_disable:zoneHash=2005",
+        "snapshot.restore_old:zoneHash=2005",
+        "snapshot.clear_active:zoneHash=2005",
+        "disable_pvp",
+        "heal",
+        "send_message:message=<color=#888888>Colosseum match ended — gear restored.</color>"
+      ]
+    }
+  }
+}

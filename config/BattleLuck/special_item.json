@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "itemName": "PvP Transformation Token",
+  "prefab": "Item_Consumable_GlassBottle_BloodRosePotion_T01",
+  "adminOnlyDeletable": true,
+  "onAcquire": {
+    "renamePrefix": "[pvp]",
+    "changeBloodType": "Warrior",
+    "changeBloodQuality": 100,
+    "applyKit": true,
+    "kitMode": "bloodbath"
+  }
+}

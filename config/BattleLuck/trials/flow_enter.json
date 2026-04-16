@@ -1,0 +1,34 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["trials_enter"],
+  "flows": {
+    "trials_enter": {
+      "description": "Trials entry — snapshot, heal, start timed challenge.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2004|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2004",
+        "state.clear_old:zoneHash=2004",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "heal",
+        "visual_enable:zoneHash=2004",
+        "player.teleport:targetZoneHash=2004",
+        "player.stun:durationSeconds=3",
+        "mode.start:modeId=trials",
+        "timer.start:seconds=180",
+        "send_message:message=<color=#ffcc00>⏱ Trials started — clear fast for bonus points!</color>"
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "enabled": false,
+  "bindAddress": "192.168.0.154",
+  "port": 9876,
+  "applicationId": "",
+  "publicKey": "",
+  "token": "",
+  "guildId": "",
+  "categoryId": "",
+  "channels": {
+    "logs": ""
+  },
+  "commands": [
+    { "name": "status", "description": "Check arena status", "enabled": true },
+    { "name": "leaderboard", "description": "View the leaderboard", "enabled": true }
+  ],
+  "playerMappings": []
+}

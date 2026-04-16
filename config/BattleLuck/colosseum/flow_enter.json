@@ -1,0 +1,36 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["colosseum_enter"],
+  "flows": {
+    "colosseum_enter": {
+      "description": "Colosseum entry — snapshot, kit, enable PvP, start ranked duel.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2005|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2005",
+        "state.clear_old:zoneHash=2005",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "kit.apply:kitId=colosseum",
+        "enable_pvp",
+        "set_blood:bloodType=Scholar|quality=100",
+        "heal",
+        "visual_enable:zoneHash=2005",
+        "player.teleport:targetZoneHash=2005",
+        "player.stun:durationSeconds=5",
+        "mode.start:modeId=colosseum",
+        "send_message:message=<color=#cc33ff>👑 Colosseum — ranked duel begins!</color>"
+      ]
+    }
+  }
+}

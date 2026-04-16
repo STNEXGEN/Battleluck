@@ -1,0 +1,102 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Library</OutputType>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    
+    <!-- Disable packaging and publishing -->
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PublishRepositoryUrl>false</PublishRepositoryUrl>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IncludeSource>false</IncludeSource>
+    <NuGetRoot Condition="'$(NuGetPackageRoot)' != ''">$(NuGetPackageRoot)</NuGetRoot>
+    <NuGetRoot Condition="'$(NuGetRoot)' == '' and '$(USERPROFILE)' != ''">$(USERPROFILE)\.nuget\packages\</NuGetRoot>
+    <VRisingServerRoot Condition="'$(VRisingServerRoot)' == '' and '$(VRISING_SERVER_ROOT)' != ''">$(VRISING_SERVER_ROOT)</VRisingServerRoot>
+    <VRisingServerRoot Condition="'$(VRisingServerRoot)' == ''">C:\Users\aa\OneDrive\Desktop\DedicatedServerLauncher\VRisingServer</VRisingServerRoot>
+    <VRisingServerRoot Condition="'$(VRisingServerRoot)' == '' and '$(USERPROFILE)' != ''">$(USERPROFILE)\VRisingServer</VRisingServerRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="VRising.VampireCommandFramework" />
+    <PackageReference Include="VAutomationCore" />
+
+    <PackageReference Include="VampireReferenceAssemblies" />
+    <PackageReference Include="Il2CppInterop.Runtime" />
+    <PackageReference Include="HookDOTS.API" />
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx.Core">
+      <HintPath>$(CorePath)\BepInEx.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Unity.IL2CPP">
+      <HintPath>$(CorePath)\BepInEx.Unity.IL2CPP.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(CorePath)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Iced">
+      <HintPath>$(CorePath)\Iced.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <InteropPath Condition="'$(InteropPath)' == ''">$(VRisingServerRoot)\BepInEx\interop</InteropPath>
+    <CorePath Condition="'$(CorePath)' == ''">$(VRisingServerRoot)\BepInEx\core</CorePath>
+    <UnityLibsPath Condition="'$(UnityLibsPath)' == ''">$(VRisingServerRoot)\BepInEx\unity-libs</UnityLibsPath>
+    <ServerPluginPath Condition="'$(ServerPluginPath)' == ''">$(VRisingServerRoot)\BepInEx\plugins</ServerPluginPath>
+    <ServerConfigPath Condition="'$(ServerConfigPath)' == ''">$(VRisingServerRoot)\BepInEx\config\BattleLuck</ServerConfigPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Stunlock.Core">
+      <HintPath>$(InteropPath)\Stunlock.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UnityLibDlls Include="$(UnityLibsPath)\*.dll" />
+    <Reference Include="@(UnityLibDlls->'%(Filename)')">
+      <HintPath>%(UnityLibDlls.Identity)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="config\BattleLuck\**\*.json" />
+    <ServerConfigFiles Include="config\BattleLuck\**\*" />
+  </ItemGroup>
+
+  <Target Name="BuildToServer" AfterTargets="Build">
+    <MakeDir Directories="$(ServerConfigPath);@(ServerConfigFiles->'$(ServerConfigPath)\%(RecursiveDir)')" />
+    <Copy
+      SourceFiles="@(ServerConfigFiles)"
+      DestinationFiles="@(ServerConfigFiles->'$(ServerConfigPath)\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(TargetDir)$(ProjectName).dll"
+      DestinationFolder="$(ServerPluginPath)"
+      Retries="0"
+      ContinueOnError="WarnAndContinue" />
+  </Target>
+
+</Project>

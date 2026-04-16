@@ -1,0 +1,33 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["gauntlet_enter"],
+  "flows": {
+    "gauntlet_enter": {
+      "description": "Gauntlet entry — snapshot, kit, heal, start mode.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "snapshot.save_old:zoneHash=2001|snapshotScope=all",
+        "snapshot.mark_active:zoneHash=2001",
+        "state.clear_old:zoneHash=2001",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "heal",
+        "visual_enable:zoneHash=2001",
+        "player.teleport:targetZoneHash=2001",
+        "player.stun:durationSeconds=3",
+        "mode.start:modeId=gauntlet",
+        "send_message:message=<color=#ff9933>⚔ Gauntlet entered — waves incoming!</color>"
+      ]
+    }
+  }
+}

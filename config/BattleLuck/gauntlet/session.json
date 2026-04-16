@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "displayName": "Gauntlet",
+  "description": "PvE wave survival — fight escalating waves of enemies.",
+  "useEcs": true,
+  "startDelay": {
+    "seconds": 5
+  },
+  "rules": {
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "enablePvP": false,
+    "enableVBloods": true,
+    "enableEliteMobs": true,
+    "matchDurationMinutes": 10,
+    "allowLateJoin": false,
+    "requireReadyCheck": true,
+    "restrictGear": false,
+    "shareLoot": true,
+    "resetOnExit": true,
+    "eliminationMode": false,
+    "livesPerPlayer": 3
+  }
+}

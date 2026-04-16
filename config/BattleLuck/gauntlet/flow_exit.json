@@ -1,0 +1,32 @@
+{
+  "delayBefore": {
+    "seconds": 1
+  },
+  "delayBetweenFlows": {
+    "seconds": 1
+  },
+  "delayBetweenActions": {
+    "seconds": 1
+  },
+  "executionOrder": ["gauntlet_exit"],
+  "flows": {
+    "gauntlet_exit": {
+      "description": "Gauntlet exit — end mode, restore snapshot.",
+      "delayBetweenActions": {
+        "seconds": 1
+      },
+      "actions": [
+        "mode.end:modeId=gauntlet",
+        "state.clear_zone:zoneHash=2001",
+        "buff.clear_all",
+        "ability.reset_slots",
+        "inventory.clear_kit:kitId=gauntlet",
+        "visual_disable:zoneHash=2001",
+        "snapshot.restore_old:zoneHash=2001",
+        "snapshot.clear_active:zoneHash=2001",
+        "heal",
+        "send_message:message=<color=#888888>Gauntlet exited — gear restored.</color>"
+      ]
+    }
+  }
+}
