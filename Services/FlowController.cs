@@ -261,6 +261,39 @@ public sealed class FlowController
                     }
                     break;
 
+                // ── Inventory delivery ──────────────────────────────────
+                // Syntax: inventory.send:itemId=<guid_int>|amount=<n>[|destinationNetId=<ulong>]
+                // If destinationNetId is omitted, sends to the flow's playerCharacter.
+                case "inventory.send":
+                    {
+                        if (!parameters.TryGetValue("itemId", out var itemIdStr) ||
+                            !int.TryParse(itemIdStr, out int itemGuidInt))
+                        {
+                            BattleLuckPlugin.LogWarning("[FlowController] inventory.send: missing or invalid itemId.");
+                            break;
+                        }
+
+                        parameters.TryGetValue("amount", out var amountStr);
+                        int sendAmount = int.TryParse(amountStr, out int pa) ? pa : 1;
+
+                        Entity sendTarget = playerCharacter;
+                        if (parameters.TryGetValue("destinationNetId", out var destNetStr) &&
+                            ulong.TryParse(destNetStr, out ulong destNetVal))
+                        {
+                            if (!TryResolveEntityByNetworkId(destNetVal, out var resolved))
+                            {
+                                BattleLuckPlugin.LogWarning($"[FlowController] inventory.send: destinationNetId {destNetVal} not found.");
+                                break;
+                            }
+                            sendTarget = resolved;
+                        }
+
+                        var prefab = new PrefabGUID(itemGuidInt);
+                        bool sent = sendTarget.TrySendItemTo(prefab, sendAmount);
+                        BattleLuckPlugin.LogInfo($"[FlowController] inventory.send item={itemGuidInt} x{sendAmount} → sent={sent}");
+                    }
+                    break;
+
                 case "visual_enable":
                 case "visual_disable":
                     break; // stub
@@ -400,5 +433,36 @@ public sealed class FlowController
 
         user = userEntity.Read<ProjectM.Network.User>();
         return true;
+    }
+
+    /// <summary>
+    /// Resolves a ulong network-id value to an Entity by scanning all NetworkId-bearing entities.
+    /// Uses the same digit-extraction strategy as AdminCommands to handle V Rising's NetworkId format.
+    /// </summary>
+    static bool TryResolveEntityByNetworkId(ulong networkIdValue, out Entity resolved)
+    {
+        resolved = Entity.Null;
+        var em = VRisingCore.EntityManager;
+        var query = em.CreateEntityQuery(ComponentType.ReadOnly<NetworkId>());
+        var entities = query.ToEntityArray(Unity.Collections.Allocator.Temp);
+        try
+        {
+            foreach (var e in entities)
+            {
+                if (!e.Exists()) continue;
+                var netId = e.Read<NetworkId>();
+                var digitOnly = new string(netId.ToString().Where(c => char.IsDigit(c)).ToArray());
+                if (ulong.TryParse(digitOnly, out ulong parsed) && parsed == networkIdValue)
+                {
+                    resolved = e;
+                    return true;
+                }
+            }
+        }
+        finally
+        {
+            if (entities.IsCreated) entities.Dispose();
+        }
+        return false;
     }
 }

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Standalone tool — no BepInEx/game references needed -->
+    <RootNamespace>BattleLuck</RootNamespace>
+    <AssemblyName>GenerateREADME</AssemblyName>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude all plugin source; only GenerateREADME.cs is the entry point -->
+    <Compile Remove="**\*.cs" />
+    <Compile Include="GenerateREADME.cs" />
+  </ItemGroup>
+</Project>

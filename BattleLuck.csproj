@@ -99,4 +99,14 @@
       ContinueOnError="WarnAndContinue" />
   </Target>
 
+
+  <!-- Auto-regenerate README.md after every local build. Skipped in CI. -->
+  <Target Name="GenerateReadme" AfterTargets="Build"
+          Condition="'$(GITHUB_ACTIONS)' != 'true'">
+    <Exec Command="dotnet run --project &quot;$(MSBuildProjectDirectory)\GenerateREADME.csproj&quot; -- &quot;$(MSBuildProjectDirectory)\Commands&quot; &quot;$(MSBuildProjectDirectory)\README.md&quot;"
+          ContinueOnError="WarnAndContinue"
+          WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
 </Project>
+

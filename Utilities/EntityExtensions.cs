@@ -413,6 +413,36 @@ public static class EntityExtensions
     }
 
     /// <summary>
+    /// Sends a single item stack to any destination entity that carries an inventory
+    /// (container, player, or other unit). Returns true if the item was accepted.
+    /// </summary>
+    public static bool TrySendItemTo(this Entity destination, PrefabGUID item, int amount)
+    {
+        if (!destination.Exists() || item == PrefabGUID.Empty || amount <= 0)
+            return false;
+
+        return Sgm.TryAddInventoryItem(destination, item, amount);
+    }
+
+    /// <summary>
+    /// Sends multiple item stacks to any destination entity with an inventory.
+    /// Returns the number of stacks successfully delivered.
+    /// </summary>
+    public static int TrySendItemsTo(this Entity destination, IEnumerable<(PrefabGUID item, int amount)> items)
+    {
+        if (!destination.Exists()) return 0;
+
+        int delivered = 0;
+        foreach (var (item, amount) in items)
+        {
+            if (item == PrefabGUID.Empty || amount <= 0) continue;
+            if (Sgm.TryAddInventoryItem(destination, item, amount))
+                delivered++;
+        }
+        return delivered;
+    }
+
+    /// <summary>
     /// Moves items from an NPC inventory to any destination inventory carrier
     /// (container, player, or other unit) using configurable conditions.
     /// Returns total moved item amount.
