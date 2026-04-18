@@ -1,6 +1,58 @@
 # BattleLuck
 
-BattleLuck is a V Rising BepInEx plugin focused on competitive arena-style modes, player state snapshots, zone-driven match flow, optional AI assistance, Discord/webhook integrations, and server-side event control.
+BattleLuck is a V Rising BepInEx plugin focused on competitive arena-style modes, player state snapshots, zone-driven match flow, optional AI assistance, Discord/webhook integrations, and server-side event control. all thrue configs u can change actions while u r in the game , some actions are working with ai like .ai servant send regionname some not 
+
+
+## 📚 Documentation
+
+**For comprehensive documentation, see [docs/README.md](docs/README.md)**
+
+Covers: Installation, Configuration, Commands, APIs, Troubleshooting, and more.
+
+**Additional Resources**:
+- [System Architecture](docs/ARCHITECTURE.md) - Detailed system design
+- [Audit Report](docs/AUDIT_REPORT.md) - Documentation audit summary
+- [V Rising Modding](docs/vrisingmods/) - V Rising ECS reference
+
+## 🚀 CI/CD
+
+BattleLuck uses GitHub Actions for automated building and releasing.
+
+### Build & Release
+
+Automatically builds the mod on every push to `main`/`master` and creates GitHub releases with semantic versioning.
+
+**Triggers**: Push to main/master, manual dispatch
+
+### Thunderstore Release
+
+Publishes releases to Thunderstore when a GitHub release is published.
+
+**Setup Required**:
+1. Add `THUNDERSTORE_KEY` secret to your repository settings
+2. Create releases through GitHub UI or manually via workflow dispatch
+
+**Getting Thunderstore API Key**:
+1. Go to [Thunderstore](https://thunderstore.io/)
+2. Sign in and go to Settings → API Keys
+3. Create a new API key
+4. Add it as `THUNDERSTORE_KEY` in your GitHub repository secrets
+
+### Dependency Updates
+
+Automatically checks for NuGet package updates weekly and creates pull requests.
+
+**Triggers**: Weekly (Sundays), manual dispatch
+
+### Semantic Versioning
+
+Version numbers are automatically incremented based on commit messages:
+
+- `+semver:major` or `+semver:breaking` → Major version bump (x.0.0)
+- `+semver:minor` or `+semver:feature` → Minor version bump (0.x.0)
+- `+semver:patch` or `+semver:fix` → Patch version bump (0.0.x)
+
+**Example**: `git commit -m "add new game mode +semver:minor"`
 
 ## Modes
 
@@ -215,130 +267,44 @@ Third-party dependency and runtime component notices are documented in `THIRD_PA
 - Building restriction bypass is handled by debug-setting toggles in `BuildingRestrictionController`.
 - `PlaceTileModelSystemPatch` only re-blocks castle heart placement while free-build is active.
 - If prefab validation fails, prefer live prefab scanning/export over stale hardcoded GUIDs.
-#   B a t t l e l u c k . 
- 
- #   B a t t l e l u c k . 
- 
- #   B a t t l e l u c k . 
- 
- 
-## Flow Actions
+#
+## Badges  
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://choosealicense.com/licenses/gpl-3.0/)  
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)  
 
-Flow actions are strings inside `flow_enter.json` / `flow_exit.json`.
-Syntax: `actionName:key=value|key2=value2`
+## Features  
+- Accessibility in VS Code  
+- Download directly to project root  
+- Live Previews    
 
-| Action | Notes |
-| --- | --- |
-| `ability.reset_slots` |  |
-| `ability.unlock_all` |  |
-| `ability.unlock_school` |  |
-| `buff.clear_all` |  |
-| `disable_pvp` |  |
-| `enable_pvp` |  |
-| `heal` |  |
-| `inventory.clear_kit` |  |
-| `inventory.send` |  |
-| `kit.apply` |  |
-| `kit.apply_armor` |  |
-| `kit.apply_weapons` |  |
-| `level.set_max` |  |
-| `mode.end` |  |
-| `mode.start` |  |
-| `notify` |  |
-| `player.stun` |  |
-| `player.teleport` |  |
-| `send_message` |  |
-| `set_blood` |  |
-| `snapshot.clear_active` |  |
-| `snapshot.mark_active` |  |
-| `snapshot.restore` |  |
-| `snapshot.restore_old` |  |
-| `snapshot.save` |  |
-| `snapshot.save_old` |  |
-| `state.clear_old` |  |
-| `state.clear_zone` |  |
-| `teleport` |  |
-| `visual_disable` |  |
-| `visual_enable` |  |
+## License  
+[MIT](https://choosealicense.com/licenses/mit/)  
 
+## Run Locally  
+Clone the project  
 
-## Flow Actions
+~~~bash  
+  git clone https://link-to-project
+~~~
 
-Flow actions are strings inside `flow_enter.json` / `flow_exit.json`.
-Syntax: `actionName:key=value|key2=value2`
+Go to the project directory  
 
-| Action | Notes |
-| --- | --- |
-| `ability.reset_slots` |  |
-| `ability.unlock_all` |  |
-| `ability.unlock_school` |  |
-| `buff.clear_all` |  |
-| `disable_pvp` |  |
-| `enable_pvp` |  |
-| `heal` |  |
-| `inventory.clear_kit` |  |
-| `inventory.send` |  |
-| `kit.apply` |  |
-| `kit.apply_armor` |  |
-| `kit.apply_weapons` |  |
-| `level.set_max` |  |
-| `mode.end` |  |
-| `mode.start` |  |
-| `notify` |  |
-| `player.stun` |  |
-| `player.teleport` |  |
-| `send_message` |  |
-| `set_blood` |  |
-| `snapshot.clear_active` |  |
-| `snapshot.mark_active` |  |
-| `snapshot.restore` |  |
-| `snapshot.restore_old` |  |
-| `snapshot.save` |  |
-| `snapshot.save_old` |  |
-| `state.clear_old` |  |
-| `state.clear_zone` |  |
-| `teleport` |  |
-| `visual_disable` |  |
-| `visual_enable` |  |
+~~~bash  
+  cd my-project
+~~~
 
+Install dependencies  
 
-## Flow Actions
+~~~bash  
+npm install
+~~~
 
-Flow actions are strings inside `flow_enter.json` / `flow_exit.json`.
-Syntax: `actionName:key=value|key2=value2`
+Start the server  
 
-| Action | Notes |
-| --- | --- |
-| `ability.reset_slots` |  |
-| `ability.unlock_all` |  |
-| `ability.unlock_school` |  |
-| `buff.clear_all` |  |
-| `disable_pvp` |  |
-| `enable_pvp` |  |
-| `heal` |  |
-| `inventory.clear_kit` |  |
-| `inventory.send` |  |
-| `kit.apply` |  |
-| `kit.apply_armor` |  |
-| `kit.apply_weapons` |  |
-| `level.set_max` |  |
-| `mode.end` |  |
-| `mode.start` |  |
-| `notify` |  |
-| `player.stun` |  |
-| `player.teleport` |  |
-| `send_message` |  |
-| `set_blood` |  |
-| `snapshot.clear_active` |  |
-| `snapshot.mark_active` |  |
-| `snapshot.restore` |  |
-| `snapshot.restore_old` |  |
-| `snapshot.save` |  |
-| `snapshot.save_old` |  |
-| `state.clear_old` |  |
-| `state.clear_zone` |  |
-| `teleport` |  |
-| `visual_disable` |  |
-| `visual_enable` |  |
+~~~bash  
+npm run start
+~~~  
 
-
+## Screenshots  
+![App Screenshot](https://lanecdr.org/wp-content/uploads/2019/08/placeholder.png)  
